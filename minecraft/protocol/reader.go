@@ -32,6 +32,14 @@ func NewReader(r interface {
 	return &Reader{r: r, shieldID: shieldID}
 }
 
+type Reads interface {
+	Reads() bool
+}
+
+func (r *Reader) Reads() bool {
+	return true
+}
+
 // Uint8 reads a uint8 from the underlying buffer.
 func (r *Reader) Uint8(x *uint8) {
 	var err error
