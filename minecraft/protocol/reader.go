@@ -483,7 +483,7 @@ func (r *Reader) Recipe(x *Recipe) {
 		r.UnknownEnumOption(recipeType, "crafting data recipe type")
 		return
 	}
-	(*x).Unmarshal(r)
+	(*x).Marshal(r)
 }
 
 // EventType reads an Event's type from the reader.
