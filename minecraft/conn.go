@@ -319,7 +319,7 @@ func (conn *Conn) WritePacket(pk packet.Packet) error {
 	l := buf.Len()
 
 	for _, converted := range conn.proto.ConvertFromLatest(pk, conn) {
-		converted.Marshal(protocol.NewWriter(buf, conn.shieldID.Load()))
+		converted.Marshal(conn.proto.NewWriter(buf, conn.shieldID.Load()))
 
 		if conn.packetFunc != nil {
 			conn.packetFunc(*conn.hdr, buf.Bytes()[l:], conn.LocalAddr(), conn.RemoteAddr())
@@ -1059,6 +1059,7 @@ func (conn *Conn) startGame() {
 		DisablePlayerInteractions:    data.DisablePlayerInteractions,
 		BaseGameVersion:              data.BaseGameVersion,
 		GameVersion:                  protocol.CurrentVersion,
+		UseBlockNetworkIDHashes:      data.UseBlockNetworkIDHashes,
 	})
 	_ = conn.Flush()
 	conn.expect(packet.IDRequestChunkRadius, packet.IDSetLocalPlayerAsInitialised)
@@ -1248,6 +1249,7 @@ func (conn *Conn) handleStartGame(pk *packet.StartGame) error {
 		DisablePlayerInteractions:    pk.DisablePlayerInteractions,
 		ClientSideGeneration:         pk.ClientSideGeneration,
 		Experiments:                  pk.Experiments,
+		UseBlockNetworkIDHashes:      pk.UseBlockNetworkIDHashes,
 	}
 	for _, item := range pk.Items {
 		if item.Name == "minecraft:shield" {
