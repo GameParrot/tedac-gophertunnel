@@ -55,18 +55,18 @@ type writer interface {
 // convert any packets, as they are already of the right type.
 type proto struct{}
 
-func (proto) ID() int32              { return protocol.CurrentProtocol }
-func (p proto) Ver() string          { return protocol.CurrentVersion }
-func (p proto) Packets() packet.Pool { return packet.NewPool() }
+func (proto) ID() int32                                 { return protocol.CurrentProtocol }
+func (proto) Ver() string                               { return protocol.CurrentVersion }
+func (proto) Packets() packet.Pool                      { return packet.NewPool() }
 func (proto) Encryption(key [32]byte) packet.Encryption { return packet.NewCTREncryption(key[:]) }
-func (p proto) NewReader(r reader, shieldID int32) protocol.IO {
+func (proto) NewReader(r reader, shieldID int32) protocol.IO {
 	return protocol.NewReader(r, shieldID)
 }
-func (p proto) NewWriter(w writer, shieldID int32) protocol.IO {
+func (proto) NewWriter(w writer, shieldID int32) protocol.IO {
 	return protocol.NewWriter(w, shieldID)
 }
-func (p proto) ConvertToLatest(pk packet.Packet, _ *Conn) []packet.Packet { return []packet.Packet{pk} }
-func (p proto) ConvertFromLatest(pk packet.Packet, _ *Conn) []packet.Packet {
+func (proto) ConvertToLatest(pk packet.Packet, _ *Conn) []packet.Packet { return []packet.Packet{pk} }
+func (proto) ConvertFromLatest(pk packet.Packet, _ *Conn) []packet.Packet {
 	return []packet.Packet{pk}
 }
 
