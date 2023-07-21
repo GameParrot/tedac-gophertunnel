@@ -15,9 +15,11 @@ type Protocol interface {
 	ID() int32
 	// Ver returns the Minecraft version associated with this Protocol, such as "1.18.10".
 	Ver() string
-	// Packets returns a packet.Pool with all packets registered for this Protocol. It is used to lookup packets by a
-	// packet ID.
-	Packets() packet.Pool
+	// Packets returns a packet.Pool with all packets registered for this
+	// Protocol. It is used to lookup packets by a packet ID. If listener is set
+	// to true, the pool should be created for a Listener. This means that only
+	// packets that may be sent by a client should be allowed.
+	Packets(listener bool) packet.Pool
 
 	// Encryption returns a new encryption instance used by this Protocol.
 	Encryption(key [32]byte) packet.Encryption
@@ -27,7 +29,7 @@ type Protocol interface {
 	NewReader(r interface {
 		io.Reader
 		io.ByteReader
-	}, shieldID int32) protocol.IO
+	}, shieldID int32, enableLimits bool) protocol.IO
 	// NewWriter returns a protocol.IO that implements writing operations for writing types
 	// that are used for this Protocol.
 	NewWriter(w interface {
@@ -51,15 +53,20 @@ type Protocol interface {
 // convert any packets, as they are already of the right type.
 type proto struct{}
 
-func (proto) ID() int32                                 { return protocol.CurrentProtocol }
-func (proto) Ver() string                               { return protocol.CurrentVersion }
-func (proto) Packets() packet.Pool                      { return packet.NewPool() }
+func (proto) ID() int32              { return protocol.CurrentProtocol }
+func (proto) Ver() string          { return protocol.CurrentVersion }
+func (proto) Packets(listener bool) packet.Pool {
+	if listener {
+		packet.NewClientPool()
+	}
+	return packet.NewServerPool()
+}
 func (proto) Encryption(key [32]byte) packet.Encryption { return packet.NewCTREncryption(key[:]) }
 func (proto) NewReader(r interface {
 	io.Reader
 	io.ByteReader
-}, shieldID int32) protocol.IO {
-	return protocol.NewReader(r, shieldID)
+}, shieldID int32, enableLimits bool) protocol.IO {
+	return protocol.NewReader(r, shieldID, enableLimits)
 }
 func (proto) NewWriter(w interface {
 	io.Writer
