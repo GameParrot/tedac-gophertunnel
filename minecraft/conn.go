@@ -723,7 +723,7 @@ func (conn *Conn) handleLogin(pk *packet.Login) error {
 	for _, pro := range conn.acceptedProto {
 		if pro.ID() == pk.ClientProtocol {
 			conn.proto = pro
-			conn.pool = pro.Packets()
+			conn.pool = pro.Packets(true)
 			found = true
 			break
 		}
