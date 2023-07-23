@@ -35,10 +35,15 @@ func NewReader(r interface {
 
 type Reads interface {
 	Reads() bool
+	LimitsEnabled() bool
 }
 
 func (r *Reader) Reads() bool {
 	return true
+}
+
+func (r *Reader) LimitsEnabled() bool {
+	return r.limitsEnabled
 }
 
 // Uint8 reads a uint8 from the underlying buffer.
