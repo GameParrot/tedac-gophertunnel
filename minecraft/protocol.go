@@ -57,7 +57,7 @@ func (proto) ID() int32              { return protocol.CurrentProtocol }
 func (proto) Ver() string          { return protocol.CurrentVersion }
 func (proto) Packets(listener bool) packet.Pool {
 	if listener {
-		packet.NewClientPool()
+		return packet.NewClientPool()
 	}
 	return packet.NewServerPool()
 }

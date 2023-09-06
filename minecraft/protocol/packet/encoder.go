@@ -3,7 +3,7 @@ package packet
 import (
 	"bytes"
 	"fmt"
-	"github.com/sandertv/gophertunnel/internal"
+	"github.com/sandertv/gophertunnel/minecraft/internal"
 	"io"
 )
 
