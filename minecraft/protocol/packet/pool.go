@@ -250,6 +250,7 @@ func init() {
 		IDTrimData:                      func() Packet { return &TrimData{} },
 		IDOpenSign:                      func() Packet { return &OpenSign{} },
 		IDAgentAnimation:                func() Packet { return &AgentAnimation{} },
+		IDRefreshEntitlements:           func() Packet { return &RefreshEntitlements{} },
 	}
 	for id, pk := range serverOriginating {
 		RegisterPacketFromServer(id, pk)
@@ -266,12 +267,14 @@ func init() {
 		IDMovePlayer:                      func() Packet { return &MovePlayer{} },
 		IDPassengerJump:                   func() Packet { return &PassengerJump{} },
 		IDTickSync:                        func() Packet { return &TickSync{} },
+		IDActorEvent:                      func() Packet { return &ActorEvent{} },
 		IDInventoryTransaction:            func() Packet { return &InventoryTransaction{} },
 		IDMobEquipment:                    func() Packet { return &MobEquipment{} },
 		IDInteract:                        func() Packet { return &Interact{} },
 		IDBlockPickRequest:                func() Packet { return &BlockPickRequest{} },
 		IDActorPickRequest:                func() Packet { return &ActorPickRequest{} },
 		IDPlayerAction:                    func() Packet { return &PlayerAction{} },
+		IDSetActorLink:                    func() Packet { return &SetActorLink{} },
 		IDAnimate:                         func() Packet { return &Animate{} },
 		IDRespawn:                         func() Packet { return &Respawn{} },
 		IDContainerOpen:                   func() Packet { return &ContainerOpen{} },

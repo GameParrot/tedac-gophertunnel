@@ -26,16 +26,10 @@ type Protocol interface {
 
 	// NewReader returns a protocol.IO that implements reading operations for reading types
 	// that are used for this Protocol.
-	NewReader(r interface {
-		io.Reader
-		io.ByteReader
-	}, shieldID int32, enableLimits bool) protocol.IO
+	NewReader(r ByteReader, shieldID int32, enableLimits bool) protocol.IO
 	// NewWriter returns a protocol.IO that implements writing operations for writing types
 	// that are used for this Protocol.
-	NewWriter(w interface {
-		io.Writer
-		io.ByteWriter
-	}, shieldID int32) protocol.IO
+	NewWriter(w ByteWriter, shieldID int32) protocol.IO
 	// ConvertToLatest converts a packet.Packet obtained from the other end of a Conn to a slice of packet.Packets from
 	// the latest protocol. Any packet.Packet implementation in the packet.Pool obtained through a call to Packets that
 	// is not identical to the most recent version of that packet.Packet must be converted to the most recent version of
@@ -49,29 +43,32 @@ type Protocol interface {
 	ConvertFromLatest(pk packet.Packet, conn *Conn) []packet.Packet
 }
 
+type ByteReader interface {
+	io.Reader
+	io.ByteReader
+}
+
+type ByteWriter interface {
+	io.Writer
+	io.ByteWriter
+}
+
 // proto is the default Protocol implementation. It returns the current protocol, version and packet pool and does not
 // convert any packets, as they are already of the right type.
 type proto struct{}
 
-func (proto) ID() int32              { return protocol.CurrentProtocol }
-func (proto) Ver() string          { return protocol.CurrentVersion }
+func (proto) ID() int32   { return protocol.CurrentProtocol }
+func (proto) Ver() string { return protocol.CurrentVersion }
 func (proto) Packets(listener bool) packet.Pool {
 	if listener {
 		return packet.NewClientPool()
 	}
 	return packet.NewServerPool()
 }
-func (proto) Encryption(key [32]byte) packet.Encryption { return packet.NewCTREncryption(key[:]) }
-func (proto) NewReader(r interface {
-	io.Reader
-	io.ByteReader
-}, shieldID int32, enableLimits bool) protocol.IO {
+func (proto) NewReader(r ByteReader, shieldID int32, enableLimits bool) protocol.IO {
 	return protocol.NewReader(r, shieldID, enableLimits)
 }
-func (proto) NewWriter(w interface {
-	io.Writer
-	io.ByteWriter
-}, shieldID int32) protocol.IO {
+func (proto) NewWriter(w ByteWriter, shieldID int32) protocol.IO {
 	return protocol.NewWriter(w, shieldID)
 }
 func (proto) ConvertToLatest(pk packet.Packet, _ *Conn) []packet.Packet { return []packet.Packet{pk} }
