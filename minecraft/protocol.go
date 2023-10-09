@@ -65,6 +65,7 @@ func (proto) Packets(listener bool) packet.Pool {
 	}
 	return packet.NewServerPool()
 }
+func (proto) Encryption(key [32]byte) packet.Encryption { return packet.NewCTREncryption(key[:]) }
 func (proto) NewReader(r ByteReader, shieldID int32, enableLimits bool) protocol.IO {
 	return protocol.NewReader(r, shieldID, enableLimits)
 }
