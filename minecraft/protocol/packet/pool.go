@@ -285,6 +285,7 @@ func init() {
 		IDSetPlayerGameType:               func() Packet { return &SetPlayerGameType{} },
 		IDMapInfoRequest:                  func() Packet { return &MapInfoRequest{} },
 		IDRequestChunkRadius:              func() Packet { return &RequestChunkRadius{} },
+		IDBossEvent:                       func() Packet { return &BossEvent{} },
 		IDCommandRequest:                  func() Packet { return &CommandRequest{} },
 		IDCommandBlockUpdate:              func() Packet { return &CommandBlockUpdate{} },
 		IDResourcePackChunkRequest:        func() Packet { return &ResourcePackChunkRequest{} },
@@ -331,6 +332,7 @@ func init() {
 		IDRequestNetworkSettings:          func() Packet { return &RequestNetworkSettings{} },
 		IDGameTestResults:                 func() Packet { return &GameTestResults{} },
 		IDOpenSign:                        func() Packet { return &OpenSign{} },
+		IDBlockActorData:                  func() Packet { return &BlockActorData{} },
 	}
 	for id, pk := range clientOriginating {
 		RegisterPacketFromClient(id, pk)
